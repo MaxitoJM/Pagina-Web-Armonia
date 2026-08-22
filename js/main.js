@@ -182,10 +182,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const animateElements = document.querySelectorAll('.service-card, .bg-gray-50.rounded-lg.shadow-lg');
     animateElements.forEach(el => observer.observe(el));
     
-    // Add floating animation to WhatsApp button
-    const whatsappBtn = document.querySelector('a[href*="wa.me"]');
-    if (whatsappBtn) {
-        whatsappBtn.classList.add('float-animation');
+    // WhatsApp floating button (dos números: Insolvencias y Conciliación)
+    const whatsappToggle = document.getElementById('whatsappToggle');
+    const whatsappOptions = document.getElementById('whatsappOptions');
+
+    if (whatsappToggle && whatsappOptions) {
+        whatsappToggle.classList.add('float-animation');
+
+        const setWhatsappOpen = (open) => {
+            whatsappOptions.classList.toggle('hidden', !open);
+            whatsappOptions.classList.toggle('flex', open);
+            whatsappToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+
+        whatsappToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setWhatsappOpen(whatsappOptions.classList.contains('hidden'));
+        });
+
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!whatsappOptions.contains(e.target) && !whatsappToggle.contains(e.target)) {
+                setWhatsappOpen(false);
+            }
+        });
+
+        // Cerrar con la tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                setWhatsappOpen(false);
+            }
+        });
     }
     
     // Handle form input focus effects

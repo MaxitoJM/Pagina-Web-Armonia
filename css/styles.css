@@ -257,6 +257,18 @@ img:hover {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Site Logo (header y footer) */
+.site-logo {
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* El logo no debe heredar el efecto hover global de las imágenes */
+.site-logo:hover,
+.site-logo img:hover {
+    transform: none;
+}
+
 /* Team Section - Image Styling */
 .team-member-image {
     width: 100%;
