@@ -28,11 +28,11 @@ Pagina Web Armonia/
 │   └── fonts/
 ├── css/
 │   └── styles.css      Estilos personalizados y animaciones
-├── img/                Fotos del equipo y archivos del logo
+├── img/                Fotos del equipo (equipo-*.jpg) y archivos del logo
 ├── js/
 │   └── main.js         Menú móvil, scroll, formulario, WhatsApp
 └── pages/
-    └── about.html
+    └── terminos-y-privacidad.html   Términos y Condiciones + Política de Datos
 ```
 
 ## Cómo ejecutar el proyecto
