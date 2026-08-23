@@ -1,3 +1,15 @@
+// ---------------------------------------------------------------------------
+// CONFIGURACION DEL FORMULARIO DE CONTACTO
+// ---------------------------------------------------------------------------
+// Clave de acceso de Web3Forms (https://web3forms.com). Es gratuita: se pide con
+// el correo del centro y llega por email. Mientras este vacia, el envio por
+// correo queda deshabilitado y el formulario dirige al visitante a WhatsApp.
+// NO se muestra un falso "mensaje enviado" en ningun caso.
+const WEB3FORMS_ACCESS_KEY = '';
+
+// Linea de WhatsApp a la que se envian los mensajes del formulario.
+const WHATSAPP_FORMULARIO = '573132904984'; // Conciliacion
+
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -60,88 +72,140 @@ document.addEventListener('DOMContentLoaded', function() {
     const formMessage = document.getElementById('formMessage');
     
     if (contactForm && formMessage) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Reset previous error messages
-            const errorMessages = contactForm.querySelectorAll('.error-message');
-            errorMessages.forEach(msg => msg.classList.add('hidden'));
-            
-            // Get form values
-            const nombre = document.getElementById('nombre').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const telefono = document.getElementById('telefono').value.trim();
-            const asunto = document.getElementById('asunto').value.trim();
-            const mensaje = document.getElementById('mensaje').value.trim();
-            
-            let isValid = true;
-            
-            // Validate nombre
-            if (nombre === '') {
-                showError('nombre');
-                isValid = false;
+        const submitBtn = document.getElementById('submitBtn');
+        const whatsappFormBtn = document.getElementById('whatsappFormBtn');
+
+        const mostrarMensaje = (texto, tipo) => {
+            const estilos = {
+                exito: 'p-4 rounded-lg bg-green-100 text-green-700',
+                error: 'p-4 rounded-lg bg-red-100 text-red-700',
+                aviso: 'p-4 rounded-lg bg-yellow-100 text-yellow-800'
+            };
+            formMessage.textContent = texto;
+            formMessage.className = estilos[tipo];
+            formMessage.classList.remove('hidden');
+            if (tipo === 'exito') {
+                setTimeout(() => formMessage.classList.add('hidden'), 8000);
             }
-            
-            // Validate email
+        };
+
+        // Devuelve los datos si el formulario es valido; null si no lo es.
+        const validar = () => {
+            contactForm.querySelectorAll('.error-message').forEach(m => m.classList.add('hidden'));
+
+            const datos = {
+                nombre: document.getElementById('nombre').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                asunto: document.getElementById('asunto').value.trim(),
+                mensaje: document.getElementById('mensaje').value.trim()
+            };
+            const autorizacion = document.getElementById('autorizacion');
+
+            let valido = true;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email === '' || !emailRegex.test(email)) {
-                showError('email');
-                isValid = false;
+
+            if (datos.nombre === '') { showError('nombre'); valido = false; }
+            if (datos.email === '' || !emailRegex.test(datos.email)) { showError('email'); valido = false; }
+            if (datos.telefono === '') { showError('telefono'); valido = false; }
+            if (datos.asunto === '') { showError('asunto'); valido = false; }
+            if (datos.mensaje === '') { showError('mensaje'); valido = false; }
+            if (autorizacion && !autorizacion.checked) { showError('autorizacion'); valido = false; }
+
+            if (!valido) {
+                mostrarMensaje('Por favor completa todos los campos correctamente.', 'error');
+                return null;
             }
-            
-            // Validate telefono
-            if (telefono === '') {
-                showError('telefono');
-                isValid = false;
+            return datos;
+        };
+
+        // ---------------- Envio por correo (Web3Forms) ----------------
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const trampa = document.getElementById('sitioWeb');
+            if (trampa && trampa.value !== '') { return; } // bot: se descarta en silencio
+
+            const datos = validar();
+            if (!datos) return;
+
+            if (!WEB3FORMS_ACCESS_KEY) {
+                mostrarMensaje('El envío por correo aún no está configurado. Por favor usa el botón "Enviar por WhatsApp" o escríbenos a contacto@armoniaconcertada.co', 'aviso');
+                return;
             }
-            
-            // Validate asunto
-            if (asunto === '') {
-                showError('asunto');
-                isValid = false;
-            }
-            
-            // Validate mensaje
-            if (mensaje === '') {
-                showError('mensaje');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // Show success message
-                formMessage.textContent = '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.';
-                formMessage.className = 'p-4 rounded-lg bg-green-100 text-green-700';
-                formMessage.classList.remove('hidden');
-                
-                // Reset form
-                contactForm.reset();
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    formMessage.classList.add('hidden');
-                }, 5000);
-            } else {
-                // Show error message
-                formMessage.textContent = 'Por favor completa todos los campos correctamente.';
-                formMessage.className = 'p-4 rounded-lg bg-red-100 text-red-700';
-                formMessage.classList.remove('hidden');
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    formMessage.classList.add('hidden');
-                }, 5000);
+
+            const textoOriginal = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const respuesta = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: WEB3FORMS_ACCESS_KEY,
+                        subject: 'Nuevo mensaje del sitio web: ' + datos.asunto,
+                        from_name: 'Sitio web Armonía Concertada',
+                        nombre: datos.nombre,
+                        email: datos.email,
+                        telefono: datos.telefono,
+                        asunto: datos.asunto,
+                        mensaje: datos.mensaje,
+                        autorizacion_datos: 'El titular autorizó el tratamiento de sus datos personales',
+                        fecha_autorizacion: new Date().toISOString()
+                    })
+                });
+                const resultado = await respuesta.json();
+
+                if (respuesta.ok && resultado.success) {
+                    mostrarMensaje('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'exito');
+                    contactForm.reset();
+                } else {
+                    mostrarMensaje('No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos por WhatsApp.', 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('No pudimos enviar tu mensaje. Revisa tu conexión o escríbenos por WhatsApp.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = textoOriginal;
             }
         });
+
+        // ---------------- Envio alterno por WhatsApp ----------------
+        if (whatsappFormBtn) {
+            whatsappFormBtn.addEventListener('click', () => {
+                const datos = validar();
+                if (!datos) return;
+
+                const texto =
+                    'Hola, escribo desde la página web.\n\n' +
+                    'Nombre: ' + datos.nombre + '\n' +
+                    'Correo: ' + datos.email + '\n' +
+                    'Teléfono: ' + datos.telefono + '\n' +
+                    'Asunto: ' + datos.asunto + '\n\n' +
+                    datos.mensaje;
+
+                window.open('https://wa.me/' + WHATSAPP_FORMULARIO + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+                mostrarMensaje('Abrimos WhatsApp con tu mensaje listo para enviar. Recuerda pulsar enviar en la conversación.', 'exito');
+            });
+        }
     }
-    
+
     // Helper function to show error message
     function showError(fieldId) {
         const field = document.getElementById(fieldId);
-        if (field) {
-            const errorMessage = field.parentElement.querySelector('.error-message');
+        if (!field) return;
+        // El span de error suele ser hermano del campo, pero en la casilla de
+        // autorizacion el input va dentro de un <label>, asi que subimos por el
+        // arbol hasta encontrarlo (sin salir del formulario).
+        let nodo = field.parentElement;
+        while (nodo && nodo.tagName !== 'FORM') {
+            const errorMessage = nodo.querySelector(':scope > .error-message');
             if (errorMessage) {
                 errorMessage.classList.remove('hidden');
+                return;
             }
+            nodo = nodo.parentElement;
         }
     }
     
