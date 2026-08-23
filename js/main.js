@@ -1,14 +1,11 @@
 // ---------------------------------------------------------------------------
 // CONFIGURACION DEL FORMULARIO DE CONTACTO
 // ---------------------------------------------------------------------------
-// Clave de acceso de Web3Forms (https://web3forms.com). Es gratuita: se pide con
-// el correo del centro y llega por email. Mientras este vacia, el envio por
-// correo queda deshabilitado y el formulario dirige al visitante a WhatsApp.
-// NO se muestra un falso "mensaje enviado" en ningun caso.
-const WEB3FORMS_ACCESS_KEY = '';
-
-// Linea de WhatsApp a la que se envian los mensajes del formulario.
-const WHATSAPP_FORMULARIO = '573132904984'; // Conciliacion
+// El formulario no envia correos: convierte lo que escribe el visitante en un
+// mensaje de WhatsApp y abre la conversacion con el numero indicado aqui.
+// Para cambiar la linea que recibe los mensajes, edita solo esta constante
+// (formato internacional, sin signos: 57 + numero).
+const WHATSAPP_FORMULARIO = '573132904984'; // Linea de Conciliacion
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -73,13 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (contactForm && formMessage) {
         const submitBtn = document.getElementById('submitBtn');
-        const whatsappFormBtn = document.getElementById('whatsappFormBtn');
 
         const mostrarMensaje = (texto, tipo) => {
             const estilos = {
                 exito: 'p-4 rounded-lg bg-green-100 text-green-700',
-                error: 'p-4 rounded-lg bg-red-100 text-red-700',
-                aviso: 'p-4 rounded-lg bg-yellow-100 text-yellow-800'
+                error: 'p-4 rounded-lg bg-red-100 text-red-700'
             };
             formMessage.textContent = texto;
             formMessage.className = estilos[tipo];
@@ -89,8 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // Devuelve los datos si el formulario es valido; null si no lo es.
-        const validar = () => {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
             contactForm.querySelectorAll('.error-message').forEach(m => m.classList.add('hidden'));
 
             const datos = {
@@ -114,83 +110,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!valido) {
                 mostrarMensaje('Por favor completa todos los campos correctamente.', 'error');
-                return null;
-            }
-            return datos;
-        };
-
-        // ---------------- Envio por correo (Web3Forms) ----------------
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const trampa = document.getElementById('botcheck');
-            if (trampa && trampa.checked) { return; } // bot: se descarta en silencio
-
-            const datos = validar();
-            if (!datos) return;
-
-            if (!WEB3FORMS_ACCESS_KEY) {
-                mostrarMensaje('El envío por correo aún no está configurado. Por favor usa el botón "Enviar por WhatsApp" o escríbenos a contacto@armoniaconcertada.co', 'aviso');
                 return;
             }
 
-            const textoOriginal = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
+            const texto =
+                'Hola, escribo desde la página web.\n\n' +
+                'Nombre: ' + datos.nombre + '\n' +
+                'Correo: ' + datos.email + '\n' +
+                'Teléfono: ' + datos.telefono + '\n' +
+                'Asunto: ' + datos.asunto + '\n\n' +
+                datos.mensaje;
 
-            try {
-                const respuesta = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({
-                        access_key: WEB3FORMS_ACCESS_KEY,
-                        subject: 'Nuevo mensaje del sitio web: ' + datos.asunto,
-                        from_name: 'Sitio web Armonía Concertada',
-                        replyto: datos.email,
-                        botcheck: false,
-                        nombre: datos.nombre,
-                        email: datos.email,
-                        telefono: datos.telefono,
-                        asunto: datos.asunto,
-                        mensaje: datos.mensaje,
-                        autorizacion_datos: 'El titular autorizó el tratamiento de sus datos personales',
-                        fecha_autorizacion: new Date().toISOString()
-                    })
-                });
-                const resultado = await respuesta.json();
+            const enlace = 'https://wa.me/' + WHATSAPP_FORMULARIO + '?text=' + encodeURIComponent(texto);
+            const ventana = window.open(enlace, '_blank', 'noopener');
 
-                if (respuesta.ok && resultado.success) {
-                    mostrarMensaje('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'exito');
-                    contactForm.reset();
-                } else {
-                    mostrarMensaje('No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos por WhatsApp.', 'error');
-                }
-            } catch (error) {
-                mostrarMensaje('No pudimos enviar tu mensaje. Revisa tu conexión o escríbenos por WhatsApp.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = textoOriginal;
+            if (ventana) {
+                mostrarMensaje('Abrimos WhatsApp con tu mensaje listo. Recuerda pulsar enviar en la conversación.', 'exito');
+            } else {
+                // El navegador bloqueo la ventana emergente: no fingimos que se envio
+                mostrarMensaje('Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 2 904 984.', 'error');
             }
         });
-
-        // ---------------- Envio alterno por WhatsApp ----------------
-        if (whatsappFormBtn) {
-            whatsappFormBtn.addEventListener('click', () => {
-                const datos = validar();
-                if (!datos) return;
-
-                const texto =
-                    'Hola, escribo desde la página web.\n\n' +
-                    'Nombre: ' + datos.nombre + '\n' +
-                    'Correo: ' + datos.email + '\n' +
-                    'Teléfono: ' + datos.telefono + '\n' +
-                    'Asunto: ' + datos.asunto + '\n\n' +
-                    datos.mensaje;
-
-                window.open('https://wa.me/' + WHATSAPP_FORMULARIO + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
-                mostrarMensaje('Abrimos WhatsApp con tu mensaje listo para enviar. Recuerda pulsar enviar en la conversación.', 'exito');
-            });
-        }
     }
 
     // Helper function to show error message

@@ -46,7 +46,7 @@ Pagina Web Armonia/
 - Diseño moderno y responsive
 - Navegación suave (scroll)
 - Menú móvil
-- Formulario de contacto validado
+- Formulario de contacto validado que se envía por WhatsApp
 - Botón flotante de WhatsApp con dos líneas (Insolvencias y Conciliación)
 - Integración con Google Maps
 
@@ -79,6 +79,9 @@ monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" 
 - El CSS personalizado se encuentra separado para facilitar mantenimiento.
 - Los datos de contacto aparecen en la sección "Contáctanos", en el footer y en los
   metadatos del `<head>` de `index.html`. Si cambian, deben actualizarse en esos tres lugares.
+- El formulario de contacto no usa backend ni servicio de correo: arma un mensaje de
+  WhatsApp y abre la conversación. La línea que recibe los mensajes se cambia en la
+  constante `WHATSAPP_FORMULARIO`, al inicio de `js/main.js`.
 
 ## Licencia
 
