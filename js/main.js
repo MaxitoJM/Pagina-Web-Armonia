@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const trampa = document.getElementById('sitioWeb');
-            if (trampa && trampa.value !== '') { return; } // bot: se descarta en silencio
+            const trampa = document.getElementById('botcheck');
+            if (trampa && trampa.checked) { return; } // bot: se descarta en silencio
 
             const datos = validar();
             if (!datos) return;
@@ -146,6 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         access_key: WEB3FORMS_ACCESS_KEY,
                         subject: 'Nuevo mensaje del sitio web: ' + datos.asunto,
                         from_name: 'Sitio web Armonía Concertada',
+                        replyto: datos.email,
+                        botcheck: false,
                         nombre: datos.nombre,
                         email: datos.email,
                         telefono: datos.telefono,
