@@ -295,3 +295,314 @@ img:hover {
 .team-card-image-container img:hover {
     transform: scale(1.1);
 }
+
+/* =========================================================================
+   ASOCIACION: portada dividida, bloque Escuela Colombiana de Violin,
+   navegacion con submenus y animaciones de aparicion
+   ========================================================================= */
+
+/* Las anclas no quedan tapadas por el header fijo */
+section[id] {
+    scroll-margin-top: 80px;
+}
+
+/* El menu movil puede ser mas alto que la pantalla: se desplaza por dentro */
+.mobile-menu {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+/* ---------- Navegacion con submenus ---------- */
+.nav-dropdown-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu,
+.nav-dropdown.is-open .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown .nav-chevron {
+    transition: transform 0.25s ease;
+}
+
+.nav-dropdown:hover .nav-chevron,
+.nav-dropdown.is-open .nav-chevron {
+    transform: rotate(180deg);
+}
+
+/* Anula el zoom global de botones en la navegacion */
+.nav-dropdown-btn:hover {
+    transform: none;
+}
+
+/* ---------- Portada ---------- */
+.hero-title-band {
+    background: linear-gradient(90deg, #0b0b0b 0%, #171717 45%, #0E1B36 100%);
+}
+
+.hero-title-rule {
+    width: 120px;
+    height: 2px;
+    margin: 1.25rem auto 0;
+    background: linear-gradient(90deg, #FF7A00, #B8965A);
+}
+
+.hero-split {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-half {
+    position: relative;
+    overflow: hidden;
+    flex: 1 1 0%;
+    transition: flex-grow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 1024px) {
+    .hero-split {
+        flex-direction: row;
+        min-height: 600px;
+    }
+
+    /* La mitad sobre la que esta el cursor gana protagonismo */
+    .hero-split:hover .hero-half {
+        flex-grow: 0.85;
+    }
+
+    .hero-split .hero-half:hover {
+        flex-grow: 1.15;
+    }
+}
+
+.hero-half-conciliacion {
+    background: linear-gradient(140deg, #000000 0%, #141414 55%, #6b3300 100%);
+}
+
+/* Fondo azul profundo con lineas de pentagrama doradas muy sutiles */
+.hero-half-escuela,
+.escuela-staff {
+    background-color: #0E1B36;
+    background-image:
+        linear-gradient(to bottom,
+            rgba(184, 150, 90, 0.12) 0 1px, transparent 1px 12px,
+            rgba(184, 150, 90, 0.12) 12px 13px, transparent 13px 24px,
+            rgba(184, 150, 90, 0.12) 24px 25px, transparent 25px 36px,
+            rgba(184, 150, 90, 0.12) 36px 37px, transparent 37px 48px,
+            rgba(184, 150, 90, 0.12) 48px 49px, transparent 49px 150px),
+        linear-gradient(140deg, #0E1B36 0%, #16284D 60%, #0a1328 100%);
+    background-size: 100% 150px, 100% 100%;
+}
+
+/* Linea divisoria dorada entre las dos mitades */
+@media (min-width: 1024px) {
+    .hero-half-escuela::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 1px;
+        z-index: 20;
+        background: linear-gradient(to bottom, transparent, rgba(217, 192, 143, 0.7), transparent);
+    }
+}
+
+.hero-deco {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.07;
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+}
+
+.hero-half:hover .hero-deco {
+    opacity: 0.13;
+    transform: scale(1.06) rotate(-4deg);
+}
+
+@keyframes heroFadeDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroFromLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroFromRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.hero-enter-down  { animation: heroFadeDown 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-enter-left  { animation: heroFromLeft 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+.hero-enter-right { animation: heroFromRight 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+
+/* ---------- Bloque de conciliacion ---------- */
+.bloque-conciliacion-intro {
+    background: linear-gradient(90deg, #000000 0%, #1a1a1a 60%, #3d1d00 100%);
+}
+
+/* ---------- Escuela Colombiana de Violin ---------- */
+.escuela-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7F6232;
+}
+
+.escuela-eyebrow-light {
+    color: #D9C08F;
+}
+
+.escuela-ornament {
+    position: relative;
+    width: 96px;
+    height: 1px;
+    margin: 1.25rem auto 0;
+    background: linear-gradient(90deg, transparent, #B8965A, transparent);
+}
+
+.escuela-ornament::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    background: #B8965A;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.escuela-card {
+    background: #ffffff;
+    border: 1px solid rgba(184, 150, 90, 0.25);
+    border-radius: 0.875rem;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.escuela-card:hover,
+.js .escuela-card[data-reveal].is-visible:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -18px rgba(14, 27, 54, 0.35);
+    border-color: rgba(184, 150, 90, 0.65);
+}
+
+.escuela-diamond {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: #B8965A;
+    transform: rotate(45deg);
+}
+
+.escuela-cta-bg {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(184, 150, 90, 0.22), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(184, 150, 90, 0.14), transparent 40%),
+        linear-gradient(135deg, #0E1B36 0%, #16284D 100%);
+}
+
+/* Linea que une los pasos del proceso en escritorio */
+@media (min-width: 1024px) {
+    .proceso-linea::before {
+        content: '';
+        position: absolute;
+        top: 32px;
+        left: 12.5%;
+        right: 12.5%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #B8965A 12%, #B8965A 88%, transparent);
+    }
+}
+
+/* Preguntas frecuentes */
+.faq-item summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item .faq-icon {
+    transition: transform 0.35s ease;
+}
+
+.faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-item[open] .faq-answer {
+    animation: faqOpen 0.4s ease both;
+}
+
+@keyframes faqOpen {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Aparicion al hacer scroll ----------
+   Solo se ocultan si JS esta activo (clase .js en <html>), para que el
+   contenido nunca quede invisible si el script falla. El retraso escalonado
+   lo aplica JS, asi el hover de las tarjetas no hereda ningun retraso. */
+.js [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js [data-reveal="zoom"]  { transform: scale(0.96); }
+
+/* Las entradas laterales solo en pantallas anchas: por debajo de 1280px el
+   contenedor casi no tiene margen y un elemento desplazado a la derecha antes
+   de aparecer se sale de la pantalla y provoca scroll horizontal */
+@media (min-width: 1280px) {
+    .js [data-reveal="left"]  { transform: translateX(-32px); }
+    .js [data-reveal="right"] { transform: translateX(32px); }
+}
+
+/* Red de seguridad frente a cualquier desborde horizontal. Se usa clip y no
+   hidden: hidden convertiria al body en contenedor de scroll y dejaria de
+   funcionar window.scrollY, del que dependen el header y la navegacion activa */
+body {
+    overflow-x: clip;
+}
+
+.js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .hero-enter-down,
+    .hero-enter-left,
+    .hero-enter-right,
+    .float-animation {
+        animation: none !important;
+    }
+
+    .hero-half,
+    .hero-deco,
+    .escuela-card,
+    .nav-dropdown-menu {
+        transition: none !important;
+    }
+}

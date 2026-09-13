@@ -1,39 +1,136 @@
 // ---------------------------------------------------------------------------
-// CONFIGURACION DEL FORMULARIO DE CONTACTO
+// CONFIGURACION DE WHATSAPP
 // ---------------------------------------------------------------------------
-// El formulario no envia correos: convierte lo que escribe el visitante en un
-// mensaje de WhatsApp y abre la conversacion con el numero indicado aqui.
-// Para cambiar la linea que recibe los mensajes, edita solo esta constante
-// (formato internacional, sin signos: 57 + numero).
+// Los formularios no envian correos: convierten lo que escribe el visitante en
+// un mensaje de WhatsApp y abren la conversacion con el numero indicado aqui.
+// Formato internacional, sin signos: 57 + numero.
+
+// Linea que recibe el formulario de contacto del Centro de Conciliacion.
 const WHATSAPP_FORMULARIO = '573132904984'; // Linea de Conciliacion
+
+// Linea de la Escuela Colombiana de Violin (formulario de valoracion, boton
+// flotante y llamados a la accion de la escuela).
+const WHATSAPP_ESCUELA = '573105593959'; // 310 559 3959
+
+// Abre WhatsApp con el texto listo. Devuelve false si el navegador bloqueo la
+// ventana. No se usa 'noopener' en window.open porque con esa opcion el
+// navegador siempre devuelve null y no se podria saber si la ventana se abrio;
+// en su lugar se corta la referencia al opener manualmente.
+function abrirWhatsApp(numero, texto) {
+    const enlace = 'https://wa.me/' + numero + '?text=' + encodeURIComponent(texto);
+    const ventana = window.open(enlace, '_blank');
+    if (!ventana) return false;
+    try { ventana.opener = null; } catch (e) { /* sin acceso: nada que cortar */ }
+    return true;
+}
+
+// Muestra un aviso de exito o error bajo un formulario.
+function mostrarAviso(elemento, texto, tipo) {
+    const estilos = {
+        exito: 'p-4 rounded-lg bg-green-100 text-green-700',
+        error: 'p-4 rounded-lg bg-red-100 text-red-700'
+    };
+    elemento.textContent = texto;
+    elemento.className = estilos[tipo];
+    elemento.classList.remove('hidden');
+    if (tipo === 'exito') {
+        setTimeout(() => elemento.classList.add('hidden'), 8000);
+    }
+}
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    
+
+    // Enlaces de la escuela que dependen del numero configurado arriba
+    document.querySelectorAll('[data-whatsapp-escuela]').forEach(enlace => {
+        enlace.href = 'https://wa.me/' + WHATSAPP_ESCUELA;
+    });
+
     // Mobile Menu Toggle
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    
+
+    // Abre o cierra el menu y sincroniza el bloqueo de scroll del body.
+    // Antes, al tocar un enlace el menu se cerraba pero el body seguia con
+    // overflow: hidden y la pagina quedaba sin poder desplazarse.
+    const setMobileMenu = (open) => {
+        if (!mobileMenuBtn || !mobileMenu) return;
+        mobileMenu.classList.toggle('hidden', !open);
+        mobileMenuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.style.overflow = open ? 'hidden' : '';
+    };
+
     if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setMobileMenu(mobileMenu.classList.contains('hidden'));
         });
-        
+
         // Close mobile menu when clicking on a link
-        const mobileLinks = mobileMenu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => setMobileMenu(false));
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.classList.contains('hidden') &&
+                !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                setMobileMenu(false);
+            }
+        });
+
+        // Si se agranda la ventana hasta escritorio, el menu movil no debe quedar abierto
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) setMobileMenu(false);
         });
     }
-    
+
+    // Submenus de escritorio (Conciliacion / Escuela de Violin)
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+
+    const cerrarDropdowns = (excepto) => {
+        dropdowns.forEach(dropdown => {
+            if (dropdown === excepto) return;
+            dropdown.classList.remove('is-open');
+            const boton = dropdown.querySelector('.nav-dropdown-btn');
+            if (boton) boton.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    dropdowns.forEach(dropdown => {
+        const boton = dropdown.querySelector('.nav-dropdown-btn');
+        if (!boton) return;
+
+        boton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const abrir = !dropdown.classList.contains('is-open');
+            cerrarDropdowns(dropdown);
+            dropdown.classList.toggle('is-open', abrir);
+            boton.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+        });
+
+        // Al elegir una opcion se cierra y se quita el foco, que de otro modo
+        // mantendria el submenu abierto por :focus-within
+        dropdown.querySelectorAll('a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                cerrarDropdowns();
+                enlace.blur();
+            });
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-dropdown')) cerrarDropdowns();
+    });
+
     // Smooth Scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const destino = this.getAttribute('href');
+            if (destino.length < 2) return;
+            const target = document.querySelector(destino);
             if (target) {
+                e.preventDefault();
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -41,13 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Back to Top Button
     const backToTop = document.getElementById('backToTop');
-    
+
     if (backToTop) {
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
+            if (window.scrollY > 300) {
                 backToTop.style.opacity = '1';
                 backToTop.style.visibility = 'visible';
             } else {
@@ -55,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 backToTop.style.visibility = 'hidden';
             }
         });
-        
+
         backToTop.addEventListener('click', () => {
             window.scrollTo({
                 top: 0,
@@ -63,27 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
-    // Contact Form Validation and Submission
+
+    // Contact Form Validation and Submission (Centro de Conciliacion)
     const contactForm = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
-    
+
     if (contactForm && formMessage) {
-        const submitBtn = document.getElementById('submitBtn');
-
-        const mostrarMensaje = (texto, tipo) => {
-            const estilos = {
-                exito: 'p-4 rounded-lg bg-green-100 text-green-700',
-                error: 'p-4 rounded-lg bg-red-100 text-red-700'
-            };
-            formMessage.textContent = texto;
-            formMessage.className = estilos[tipo];
-            formMessage.classList.remove('hidden');
-            if (tipo === 'exito') {
-                setTimeout(() => formMessage.classList.add('hidden'), 8000);
-            }
-        };
-
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -109,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (autorizacion && !autorizacion.checked) { showError('autorizacion'); valido = false; }
 
             if (!valido) {
-                mostrarMensaje('Por favor completa todos los campos correctamente.', 'error');
+                mostrarAviso(formMessage, 'Por favor completa todos los campos correctamente.', 'error');
                 return;
             }
 
@@ -121,14 +203,97 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Asunto: ' + datos.asunto + '\n\n' +
                 datos.mensaje;
 
-            const enlace = 'https://wa.me/' + WHATSAPP_FORMULARIO + '?text=' + encodeURIComponent(texto);
-            const ventana = window.open(enlace, '_blank', 'noopener');
-
-            if (ventana) {
-                mostrarMensaje('Abrimos WhatsApp con tu mensaje listo. Recuerda pulsar enviar en la conversación.', 'exito');
+            if (abrirWhatsApp(WHATSAPP_FORMULARIO, texto)) {
+                mostrarAviso(formMessage, 'Abrimos WhatsApp con tu mensaje listo. Recuerda pulsar enviar en la conversación.', 'exito');
             } else {
                 // El navegador bloqueo la ventana emergente: no fingimos que se envio
-                mostrarMensaje('Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 2 904 984.', 'error');
+                mostrarAviso(formMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 2 904 984.', 'error');
+            }
+        });
+    }
+
+    // Formulario de valoracion (Escuela Colombiana de Violin)
+    const valoracionForm = document.getElementById('valoracionForm');
+    const valoracionMessage = document.getElementById('valoracionMessage');
+    const chipPrograma = document.getElementById('programaSeleccionado');
+    const chipProgramaTexto = document.getElementById('programaSeleccionadoTexto');
+    const quitarPrograma = document.getElementById('quitarPrograma');
+    let programaElegido = '';
+
+    const actualizarChipPrograma = () => {
+        if (!chipPrograma || !chipProgramaTexto) return;
+        chipProgramaTexto.textContent = programaElegido;
+        chipPrograma.classList.toggle('hidden', !programaElegido);
+        chipPrograma.classList.toggle('flex', !!programaElegido);
+    };
+
+    // Los botones "Solicitar valoracion" de cada programa lo dejan preseleccionado
+    document.querySelectorAll('[data-programa]').forEach(boton => {
+        boton.addEventListener('click', () => {
+            programaElegido = boton.dataset.programa;
+            actualizarChipPrograma();
+        });
+    });
+
+    if (quitarPrograma) {
+        quitarPrograma.addEventListener('click', () => {
+            programaElegido = '';
+            actualizarChipPrograma();
+        });
+    }
+
+    if (valoracionForm && valoracionMessage) {
+        valoracionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            valoracionForm.querySelectorAll('.error-message').forEach(m => m.classList.add('hidden'));
+
+            const valor = (id) => document.getElementById(id).value.trim();
+            const datos = {
+                nombre: valor('vNombre'),
+                edad: valor('vEdad'),
+                experiencia: valor('vExperiencia'),
+                ciudad: valor('vCiudad'),
+                modalidad: valor('vModalidad'),
+                telefono: valor('vTelefono'),
+                horario: valor('vHorario')
+            };
+            const autorizacion = document.getElementById('vAutorizacion');
+            const edad = Number(datos.edad);
+
+            let valido = true;
+            if (datos.nombre === '') { showError('vNombre'); valido = false; }
+            if (datos.edad === '' || !Number.isInteger(edad) || edad < 3 || edad > 99) { showError('vEdad'); valido = false; }
+            if (datos.experiencia === '') { showError('vExperiencia'); valido = false; }
+            if (datos.ciudad === '') { showError('vCiudad'); valido = false; }
+            if (datos.modalidad === '') { showError('vModalidad'); valido = false; }
+            if (datos.telefono.replace(/\D/g, '').length < 7) { showError('vTelefono'); valido = false; }
+            if (datos.horario === '') { showError('vHorario'); valido = false; }
+            if (autorizacion && !autorizacion.checked) { showError('vAutorizacion'); valido = false; }
+
+            if (!valido) {
+                mostrarAviso(valoracionMessage, 'Por favor completa todos los campos correctamente.', 'error');
+                return;
+            }
+
+            let texto =
+                'Hola, quiero agendar una clase de valoración en la Escuela Colombiana de Violín.\n\n' +
+                'Nombre del interesado: ' + datos.nombre + '\n' +
+                'Edad del estudiante: ' + edad + ' años\n' +
+                'Experiencia previa: ' + datos.experiencia + '\n' +
+                'Ciudad o sector: ' + datos.ciudad + '\n' +
+                'Modalidad de interés: ' + datos.modalidad + '\n' +
+                'Número de contacto: ' + datos.telefono + '\n' +
+                'Horario preferido: ' + datos.horario;
+
+            if (programaElegido) {
+                texto += '\nPrograma de interés: ' + programaElegido;
+            }
+
+            if (abrirWhatsApp(WHATSAPP_ESCUELA, texto)) {
+                mostrarAviso(valoracionMessage, 'Abrimos WhatsApp con tu solicitud lista. Recuerda pulsar enviar en la conversación.', 'exito');
+            } else {
+                mostrarAviso(valoracionMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 310 559 3959.', 'error');
             }
         });
     }
@@ -150,31 +315,22 @@ document.addEventListener('DOMContentLoaded', function() {
             nodo = nodo.parentElement;
         }
     }
-    
+
     // Header scroll effect
     const header = document.getElementById('header');
-    let lastScroll = 0;
-    
+
     if (header) {
         window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                header.classList.add('shadow-xl');
-            } else {
-                header.classList.remove('shadow-xl');
-            }
-            
-            lastScroll = currentScroll;
+            header.classList.toggle('shadow-xl', window.scrollY > 100);
         });
     }
-    
+
     // Animate elements on scroll (Intersection Observer)
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -183,12 +339,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, observerOptions);
-    
+
     // Observe all service cards and team members
     const animateElements = document.querySelectorAll('.service-card, .bg-gray-50.rounded-lg.shadow-lg');
     animateElements.forEach(el => observer.observe(el));
-    
-    // WhatsApp floating button (dos números: Insolvencias y Conciliación)
+
+    // Aparicion de los bloques marcados con data-reveal. El retraso escalonado
+    // (data-reveal-delay, en ms) se aplica aqui y no en CSS para que el hover de
+    // las tarjetas no herede ese retraso.
+    const revelables = document.querySelectorAll('[data-reveal]');
+    const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revelar = (el) => el.classList.add('is-visible');
+
+    if (reducirMovimiento || !('IntersectionObserver' in window)) {
+        revelables.forEach(revelar);
+    } else {
+        const observadorReveal = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const retraso = parseInt(el.dataset.revealDelay || '0', 10);
+                setTimeout(() => revelar(el), retraso);
+                observadorReveal.unobserve(el);
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        revelables.forEach(el => observadorReveal.observe(el));
+    }
+
+    // WhatsApp floating button (Insolvencias, Conciliacion y Escuela de Violin)
     const whatsappToggle = document.getElementById('whatsappToggle');
     const whatsappOptions = document.getElementById('whatsappOptions');
 
@@ -212,65 +391,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 setWhatsappOpen(false);
             }
         });
-
-        // Cerrar con la tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                setWhatsappOpen(false);
-            }
-        });
     }
-    
+
+    // Escape cierra cualquier menu abierto
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        cerrarDropdowns();
+        setMobileMenu(false);
+        if (whatsappOptions && whatsappToggle) {
+            whatsappOptions.classList.add('hidden');
+            whatsappOptions.classList.remove('flex');
+            whatsappToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
     // Handle form input focus effects
-    const formInputs = document.querySelectorAll('input, textarea');
-    formInputs.forEach(input => {
+    document.querySelectorAll('input, textarea, select').forEach(input => {
         input.addEventListener('focus', function() {
             this.parentElement.classList.add('focused');
         });
-        
+
         input.addEventListener('blur', function() {
             this.parentElement.classList.remove('focused');
         });
     });
-    
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
-    
-    // Prevent body scroll when mobile menu is open
-    if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            if (!mobileMenu.classList.contains('hidden')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
-        });
-    }
-    
+
     // Add active class to current section in navigation
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
-    
+    const navLinks = document.querySelectorAll('nav a[href^="#"]:not([data-no-active])');
+
     window.addEventListener('scroll', () => {
         let current = '';
-        
+
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (pageYOffset >= (sectionTop - 100)) {
+            if (window.scrollY >= (section.offsetTop - 100)) {
                 current = section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
-            link.classList.remove('text-armonia-orange');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('text-armonia-orange');
-            }
+            link.classList.toggle('text-armonia-orange', link.getAttribute('href') === `#${current}`);
+        });
+
+        // El boton del submenu se resalta si la seccion actual pertenece a su grupo
+        dropdowns.forEach(dropdown => {
+            const grupo = (dropdown.dataset.secciones || '').split(' ');
+            const boton = dropdown.querySelector('.nav-dropdown-btn');
+            if (boton) boton.classList.toggle('text-armonia-orange', grupo.includes(current));
         });
     });
 });

@@ -1,8 +1,10 @@
-# Centro de Conciliación Armonía Concertada
+# Asociación para el Fomento de la Cultura y la Conciliación
 
-Sitio web institucional del **Centro de Conciliación Armonía Concertada**, enfocado en la
-resolución alternativa de conflictos, con servicios de conciliación, insolvencia, acuerdos
-de apoyo y formación.
+Sitio web institucional de la **Asociación para el Fomento de la Cultura y la Conciliación**,
+que reúne dos frentes:
+
+- **Centro de Conciliación Armonía Concertada:** conciliación, insolvencia, acuerdos de apoyo y formación.
+- **Escuela Colombiana de Violín:** formación artística integral del violinista.
 
 Vigilado por el Ministerio de Justicia y del Derecho.
 
@@ -46,14 +48,18 @@ Pagina Web Armonia/
 - Diseño moderno y responsive
 - Navegación suave (scroll)
 - Menú móvil
+- Portada dividida: Centro de Conciliación a la izquierda y Escuela Colombiana de Violín a la derecha
 - Formulario de contacto validado que se envía por WhatsApp
-- Botón flotante de WhatsApp con dos líneas (Insolvencias y Conciliación)
+- Formulario de solicitud de valoración de la Escuela, también por WhatsApp
+- Botón flotante de WhatsApp con tres líneas (Insolvencias, Conciliación y Escuela de Violín)
+- Animaciones de aparición al hacer scroll que respetan `prefers-reduced-motion`
 - Integración con Google Maps
 
 ## Datos de contacto
 
 - **Teléfono Insolvencias:** 312 6 410 449
 - **Teléfono Conciliación:** 313 2 904 984
+- **WhatsApp Escuela Colombiana de Violín:** 310 559 3959
 - **Correo:** contacto@armoniaconcertada.co
 - **Dirección:** Oficina 306, Edificio Osaka Trade Center, Bogotá
 - **Horario de atención:** Lunes a viernes de 9:00 a.m. a 6:00 p.m.
@@ -82,10 +88,14 @@ monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" 
 - El formulario de contacto no usa backend ni servicio de correo: arma un mensaje de
   WhatsApp y abre la conversación. La línea que recibe los mensajes se cambia en la
   constante `WHATSAPP_FORMULARIO`, al inicio de `js/main.js`.
+- La Escuela usa la constante `WHATSAPP_ESCUELA` (formulario de valoración, botón flotante
+  y llamados a la acción): 310 559 3959.
+- Identidad visual de la Escuela: azul profundo `#0E1B36`, marfil `#FAF6EE`, dorado `#B8965A`
+  y grafito `#3B4049`; títulos en Cormorant Garamond y textos en Inter.
 
 ## Licencia
 
-© 2026 Centro de Conciliación Armonía Concertada
+© 2026 Asociación para el Fomento de la Cultura y la Conciliación
 Todos los derechos reservados.
 
 Desarrollado por Maximiliano Jaramillo Malavera.
