@@ -1,6 +1,6 @@
-# Asociación para el Fomento de la Cultura y la Conciliación
+# Asociación para el Fomento de la Cultura, la Justicia y la Conciliación
 
-Sitio web institucional de la **Asociación para el Fomento de la Cultura y la Conciliación**,
+Sitio web institucional de la **Asociación para el Fomento de la Cultura, la Justicia y la Conciliación**,
 que reúne dos frentes:
 
 - **Centro de Conciliación Armonía Concertada:** conciliación, insolvencia, acuerdos de apoyo y formación.
@@ -97,7 +97,7 @@ monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" 
 
 ## Licencia
 
-© 2026 Asociación para el Fomento de la Cultura y la Conciliación
+© 2026 Asociación para el Fomento de la Cultura, la Justicia y la Conciliación
 Todos los derechos reservados.
 
 Desarrollado por Maximiliano Jaramillo Malavera.
