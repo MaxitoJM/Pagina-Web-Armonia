@@ -52,8 +52,7 @@ Pagina Web Armonia/
 - Menú móvil
 - Inicio con dos áreas que llevan cada una a su página: Área jurídica y Área artística
 - Acceso a la plataforma Insolventic (https://insolventic.vercel.app)
-- Formulario de contacto validado que se envía por WhatsApp
-- Formulario de solicitud de valoración de la Escuela, también por WhatsApp
+- Formularios de contacto y de valoración que se envían por WhatsApp o por correo electrónico, a elección del usuario
 - Botón flotante de WhatsApp con tres líneas (Insolvencias, Conciliación y Escuela de Violín)
 - Animaciones de aparición al hacer scroll que respetan `prefers-reduced-motion`
 - Integración con Google Maps
@@ -88,8 +87,8 @@ monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" 
 - El CSS personalizado se encuentra separado para facilitar mantenimiento.
 - Los datos de contacto aparecen en la sección "Contáctanos", en el footer y en los
   metadatos del `<head>` de `index.html`. Si cambian, deben actualizarse en esos tres lugares.
-- El formulario de contacto no usa backend ni servicio de correo: arma un mensaje de
-  WhatsApp y abre la conversación. La línea que recibe los mensajes se cambia en la
+- Los formularios no usan backend: arman un mensaje de WhatsApp o un correo ya redactado
+  (a contacto@armoniaconcertada.co) y abren la aplicación correspondiente. La línea que recibe los mensajes se cambia en la
   constante `WHATSAPP_FORMULARIO`, al inicio de `js/main.js`.
 - La Escuela usa la constante `WHATSAPP_ESCUELA` (formulario de valoración, botón flotante
   y llamados a la acción): 310 559 3959.

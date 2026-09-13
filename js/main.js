@@ -12,6 +12,9 @@ const WHATSAPP_FORMULARIO = '573132904984'; // Linea de Conciliacion
 // flotante y llamados a la accion de la escuela).
 const WHATSAPP_ESCUELA = '573105593959'; // 310 559 3959
 
+// Correo que recibe los mensajes cuando el visitante elige "Enviar por correo".
+const CORREO_CONTACTO = 'contacto@armoniaconcertada.co';
+
 // Abre WhatsApp con el texto listo. Devuelve false si el navegador bloqueo la
 // ventana. No se usa 'noopener' en window.open porque con esa opcion el
 // navegador siempre devuelve null y no se podria saber si la ventana se abrio;
@@ -22,6 +25,15 @@ function abrirWhatsApp(numero, texto) {
     if (!ventana) return false;
     try { ventana.opener = null; } catch (e) { /* sin acceso: nada que cortar */ }
     return true;
+}
+
+// Abre la aplicacion de correo del visitante con el mensaje ya redactado.
+// Los saltos de linea se envian como CRLF, que es lo que esperan los clientes de correo.
+function abrirCorreo(asunto, texto) {
+    const cuerpo = texto.replace(/\r?\n/g, '\r\n');
+    window.location.href = 'mailto:' + CORREO_CONTACTO +
+        '?subject=' + encodeURIComponent(asunto) +
+        '&body=' + encodeURIComponent(cuerpo);
 }
 
 // Muestra un aviso de exito o error bajo un formulario.
@@ -161,14 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Contact Form Validation and Submission (Centro de Conciliacion)
+    // ---------------- Formulario de contacto (inicio) ----------------
     const contactForm = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
 
     if (contactForm && formMessage) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
+        // Valida y devuelve los datos; null si hay errores (ya quedan marcados)
+        const leerContacto = () => {
             contactForm.querySelectorAll('.error-message').forEach(m => m.classList.add('hidden'));
 
             const datos = {
@@ -192,27 +203,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!valido) {
                 mostrarAviso(formMessage, 'Por favor completa todos los campos correctamente.', 'error');
-                return;
+                return null;
             }
+            return datos;
+        };
 
-            const texto =
-                'Hola, escribo desde la página web.\n\n' +
-                'Nombre: ' + datos.nombre + '\n' +
-                'Correo: ' + datos.email + '\n' +
-                'Teléfono: ' + datos.telefono + '\n' +
-                'Asunto: ' + datos.asunto + '\n\n' +
-                datos.mensaje;
+        const redactarContacto = (datos) =>
+            'Hola, escribo desde la página web.\n\n' +
+            'Nombre: ' + datos.nombre + '\n' +
+            'Correo: ' + datos.email + '\n' +
+            'Teléfono: ' + datos.telefono + '\n' +
+            'Asunto: ' + datos.asunto + '\n\n' +
+            datos.mensaje;
 
-            if (abrirWhatsApp(WHATSAPP_FORMULARIO, texto)) {
+        // Opcion 1: WhatsApp
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const datos = leerContacto();
+            if (!datos) return;
+
+            if (abrirWhatsApp(WHATSAPP_FORMULARIO, redactarContacto(datos))) {
                 mostrarAviso(formMessage, 'Abrimos WhatsApp con tu mensaje listo. Recuerda pulsar enviar en la conversación.', 'exito');
             } else {
                 // El navegador bloqueo la ventana emergente: no fingimos que se envio
                 mostrarAviso(formMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 2 904 984.', 'error');
             }
         });
+
+        // Opcion 2: correo electronico ya redactado
+        const contactEmailBtn = document.getElementById('contactEmailBtn');
+        if (contactEmailBtn) {
+            contactEmailBtn.addEventListener('click', () => {
+                const datos = leerContacto();
+                if (!datos) return;
+                abrirCorreo('Mensaje desde la página web: ' + datos.asunto, redactarContacto(datos));
+                mostrarAviso(formMessage, 'Abrimos tu aplicación de correo con el mensaje listo para enviar. Si no se abrió, escríbenos a ' + CORREO_CONTACTO + '.', 'exito');
+            });
+        }
     }
 
-    // Formulario de valoracion (Escuela Colombiana de Violin)
+    // ---------------- Formulario de valoracion (Escuela Colombiana de Violin) ----------------
     const valoracionForm = document.getElementById('valoracionForm');
     const valoracionMessage = document.getElementById('valoracionMessage');
     const chipPrograma = document.getElementById('programaSeleccionado');
@@ -243,9 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (valoracionForm && valoracionMessage) {
-        valoracionForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
+        const leerValoracion = () => {
             valoracionForm.querySelectorAll('.error-message').forEach(m => m.classList.add('hidden'));
 
             const valor = (id) => document.getElementById(id).value.trim();
@@ -273,29 +301,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!valido) {
                 mostrarAviso(valoracionMessage, 'Por favor completa todos los campos correctamente.', 'error');
-                return;
+                return null;
             }
+            datos.edad = edad;
+            return datos;
+        };
 
+        const redactarValoracion = (datos) => {
             let texto =
                 'Hola, quiero agendar una clase de valoración en la Escuela Colombiana de Violín.\n\n' +
                 'Nombre del interesado: ' + datos.nombre + '\n' +
-                'Edad del estudiante: ' + edad + ' años\n' +
+                'Edad del estudiante: ' + datos.edad + ' años\n' +
                 'Experiencia previa: ' + datos.experiencia + '\n' +
                 'Ciudad o sector: ' + datos.ciudad + '\n' +
                 'Modalidad de interés: ' + datos.modalidad + '\n' +
                 'Número de contacto: ' + datos.telefono + '\n' +
                 'Horario preferido: ' + datos.horario;
-
             if (programaElegido) {
                 texto += '\nPrograma de interés: ' + programaElegido;
             }
+            return texto;
+        };
 
-            if (abrirWhatsApp(WHATSAPP_ESCUELA, texto)) {
+        // Opcion 1: WhatsApp
+        valoracionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const datos = leerValoracion();
+            if (!datos) return;
+
+            if (abrirWhatsApp(WHATSAPP_ESCUELA, redactarValoracion(datos))) {
                 mostrarAviso(valoracionMessage, 'Abrimos WhatsApp con tu solicitud lista. Recuerda pulsar enviar en la conversación.', 'exito');
             } else {
                 mostrarAviso(valoracionMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 310 559 3959.', 'error');
             }
         });
+
+        // Opcion 2: correo electronico ya redactado
+        const valoracionEmailBtn = document.getElementById('valoracionEmailBtn');
+        if (valoracionEmailBtn) {
+            valoracionEmailBtn.addEventListener('click', () => {
+                const datos = leerValoracion();
+                if (!datos) return;
+                abrirCorreo('Solicitud de clase de valoración – Escuela Colombiana de Violín', redactarValoracion(datos));
+                mostrarAviso(valoracionMessage, 'Abrimos tu aplicación de correo con la solicitud lista para enviar. Si no se abrió, escríbenos a ' + CORREO_CONTACTO + '.', 'exito');
+            });
+        }
     }
 
     // Helper function to show error message
@@ -414,6 +464,34 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('blur', function() {
             this.parentElement.classList.remove('focused');
         });
+    });
+
+    // Ventanas emergentes (perfil completo). Se usa <dialog>: el navegador
+    // gestiona el foco, la tecla Escape y el fondo oscurecido.
+    document.querySelectorAll('[data-modal-open]').forEach(boton => {
+        boton.addEventListener('click', () => {
+            const dialogo = document.getElementById(boton.dataset.modalOpen);
+            if (!dialogo) return;
+            if (typeof dialogo.showModal === 'function') {
+                dialogo.showModal();
+            } else {
+                dialogo.setAttribute('open', '');
+            }
+            dialogo.scrollTop = 0;
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    document.querySelectorAll('dialog').forEach(dialogo => {
+        const cerrar = () => {
+            if (typeof dialogo.close === 'function') dialogo.close();
+            else dialogo.removeAttribute('open');
+            document.body.style.overflow = '';
+        };
+        dialogo.addEventListener('close', () => { document.body.style.overflow = ''; });
+        // Clic en el fondo oscuro (fuera del contenido) cierra la ventana
+        dialogo.addEventListener('click', (e) => { if (e.target === dialogo) cerrar(); });
+        dialogo.querySelectorAll('[data-modal-close]').forEach(b => b.addEventListener('click', cerrar));
     });
 
     // Add active class to current section in navigation

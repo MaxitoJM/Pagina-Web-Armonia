@@ -798,3 +798,65 @@ body {
         transition: none !important;
     }
 }
+
+/* =========================================================================
+   Ventana emergente de perfil y credito de Insolventic
+   ========================================================================= */
+.modal-perfil {
+    width: calc(100% - 2rem);
+    max-width: 52rem;
+    max-height: 90vh;
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #ffffff;
+    color: inherit;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.modal-perfil::backdrop {
+    background: rgba(10, 12, 20, 0.65);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+}
+
+.modal-perfil[open] {
+    animation: modalEntrada 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes modalEntrada {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Dentro de la ventana no aplica el zoom global de imagenes ni de botones */
+.modal-perfil img:hover {
+    transform: none;
+}
+
+.modal-cerrar:hover {
+    transform: rotate(90deg);
+}
+
+/* Credito bajo el mockup de Insolventic */
+.insolventic__visual {
+    flex-direction: column;
+    align-items: center;
+}
+
+.insolventic__by {
+    margin-top: 1.75rem;
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    color: #C9DCF0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-perfil[open] {
+        animation: none;
+    }
+}
