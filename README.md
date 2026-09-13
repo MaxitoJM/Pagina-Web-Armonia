@@ -22,7 +22,7 @@ Vigilado por el Ministerio de Justicia y del Derecho.
 
 ```
 Pagina Web Armonia/
-├── index.html          Página principal (todas las secciones)
+├── index.html          Inicio: las dos áreas, Insolventic y Contáctanos
 ├── README.md
 ├── assets/
 │   ├── images/
@@ -34,6 +34,8 @@ Pagina Web Armonia/
 ├── js/
 │   └── main.js         Menú móvil, scroll, formulario, WhatsApp
 └── pages/
+    ├── area-juridica.html           Centro de Conciliación: fundadores, servicios, historia, equipo
+    ├── area-artistica.html          Escuela Colombiana de Violín: programas, dirección, admisiones
     └── terminos-y-privacidad.html   Términos y Condiciones + Política de Datos
 ```
 
@@ -48,7 +50,8 @@ Pagina Web Armonia/
 - Diseño moderno y responsive
 - Navegación suave (scroll)
 - Menú móvil
-- Portada dividida: Centro de Conciliación a la izquierda y Escuela Colombiana de Violín a la derecha
+- Inicio con dos áreas que llevan cada una a su página: Área jurídica y Área artística
+- Acceso a la plataforma Insolventic (https://insolventic.vercel.app)
 - Formulario de contacto validado que se envía por WhatsApp
 - Formulario de solicitud de valoración de la Escuela, también por WhatsApp
 - Botón flotante de WhatsApp con tres líneas (Insolvencias, Conciliación y Escuela de Violín)

@@ -606,3 +606,195 @@ body {
         transition: none !important;
     }
 }
+
+/* =========================================================================
+   INSOLVENTIC (plataforma digital)
+   Misma composicion que la seccion del sitio de Constructores de Paz
+   ========================================================================= */
+.insolventic {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(1000px 520px at 12% -10%, rgba(60, 154, 227, 0.28), transparent 62%),
+        radial-gradient(760px 420px at 92% 108%, rgba(246, 204, 4, 0.18), transparent 60%),
+        linear-gradient(140deg, #041E3D 0%, #062E5C 48%, #01315F 100%);
+}
+
+/* Cuadricula tenue de fondo */
+.insolventic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, #000 30%, transparent 100%);
+    mask-image: radial-gradient(70% 70% at 50% 40%, #000 30%, transparent 100%);
+}
+
+.insolventic__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 48px;
+}
+
+@media (min-width: 1024px) {
+    .insolventic__inner {
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 72px;
+    }
+}
+
+.insolventic__lead {
+    color: #C9DCF0;
+    max-width: 56ch;
+}
+
+.insolventic__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+    display: grid;
+    gap: 12px;
+}
+
+.insolventic__list li {
+    position: relative;
+    padding-left: 32px;
+    color: #DCE7F3;
+}
+
+.insolventic__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(246, 204, 4, 0.18);
+    border: 1px solid rgba(246, 204, 4, 0.55);
+}
+
+.insolventic__list li::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0.5em;
+    width: 6px;
+    height: 3px;
+    border-left: 2px solid #F6CC04;
+    border-bottom: 2px solid #F6CC04;
+    transform: rotate(-45deg);
+}
+
+.insolventic__note {
+    margin: 14px 0 0;
+    font-size: 0.86rem;
+    color: #9DB6D0;
+}
+
+.insolventic__visual {
+    display: flex;
+    justify-content: center;
+}
+
+/* Mockup de ventana de aplicacion */
+.app-window {
+    width: 100%;
+    max-width: 430px;
+    background: #F7FAFD;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    transform: perspective(1400px) rotateY(-7deg) rotateX(2deg);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.app-window:hover {
+    transform: perspective(1400px) rotateY(0deg) rotateX(0deg) translateY(-6px);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 1023px) {
+    .insolventic__visual { order: -1; }
+    .app-window { transform: none; max-width: 380px; }
+    .app-window:hover { transform: translateY(-6px); }
+}
+
+.app-window__bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 14px;
+    background: #E7EDF5;
+    border-bottom: 1px solid #D3DEEB;
+}
+
+.app-window__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex: none;
+}
+
+.app-window__dot--r { background: #FF5F57; }
+.app-window__dot--y { background: #FEBC2E; }
+.app-window__dot--g { background: #28C840; }
+
+.app-window__url {
+    margin-left: 10px;
+    font-size: 0.76rem;
+    color: #6B7F96;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    border: 1px solid #D3DEEB;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-window__body {
+    padding: 40px 28px 44px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 22%, #FFFFFF 0%, #EDF3FA 100%);
+}
+
+.app-window__logo {
+    width: clamp(120px, 26vw, 158px);
+    height: auto;
+    margin: 0 auto 20px;
+    filter: drop-shadow(0 12px 26px rgba(6, 46, 92, 0.22));
+}
+
+/* El logo no hereda el zoom global de las imagenes */
+.app-window__logo:hover {
+    transform: none;
+}
+
+.app-window__name {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #062E5C;
+    margin: 0 0 6px;
+}
+
+.app-window__tag {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #5B6B7F;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-window {
+        transition: none !important;
+    }
+}
