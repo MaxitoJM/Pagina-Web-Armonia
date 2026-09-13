@@ -156,6 +156,10 @@
                 <p class="text-[10px] sm:text-[11px] md:text-xs tracking-[0.14em] sm:tracking-[0.28em] uppercase text-gray-300 mb-4">Armonía Concertada</p>
                 <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">Asociación para el Fomento de la Cultura, la Justicia y la Conciliación</h1>
                 <div class="hero-title-rule"></div>
+                <button type="button" data-modal-open="modal-asociacion" class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-gray-100 border border-white/30 rounded-full px-5 py-2.5 hover:bg-white hover:text-armonia-black transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    ¿Qué es la Asociación?
+                </button>
             </div>
         </div>
 
@@ -203,6 +207,47 @@
             </div>
         </div>
     </section>
+
+    <!-- Ventana emergente: ¿Qué es la Asociación? -->
+    <dialog id="modal-asociacion" class="modal-perfil text-left text-gray-800" aria-labelledby="modal-asociacion-titulo">
+        <div class="sticky top-0 z-20 h-0 flex justify-end">
+            <button type="button" data-modal-close class="modal-cerrar m-3 w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white hover:bg-white/25 transition" aria-label="Cerrar">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="hero-title-band text-white text-center px-6 md:px-12 pt-14 pb-10">
+            <p class="text-[11px] tracking-[0.28em] uppercase text-gray-300 mb-4">Quiénes somos</p>
+            <h2 id="modal-asociacion-titulo" class="font-serif text-3xl md:text-4xl font-semibold leading-tight">Asociación para el Fomento de la Cultura, la Justicia y la Conciliación</h2>
+            <div class="hero-title-rule"></div>
+            <p class="font-serif italic text-xl md:text-2xl text-escuela-gold-light mt-6">Donde la justicia encuentra el diálogo y la cultura encuentra su voz.</p>
+        </div>
+        <div class="px-6 md:px-12 py-10 space-y-5 text-base md:text-lg leading-relaxed text-gray-700">
+            <p>Fundada el <strong class="text-armonia-black">30 de junio de 2016</strong>, la Asociación para el Fomento de la Cultura, la Justicia y la Conciliación nace con una visión clara: transformar vidas y contribuir a una sociedad más humana a través de la justicia, el diálogo, la educación y la cultura.</p>
+            <p>Es promotora del <strong class="text-armonia-black">Centro de Conciliación Armonía Concertada</strong> y de la <strong class="text-escuela-navy">Escuela Colombiana de Violín</strong>, dos iniciativas que, desde el derecho y el arte, trabajan por un mismo propósito: formar, inspirar y generar oportunidades de transformación.</p>
+        </div>
+        <ul class="mx-6 md:mx-12 grid gap-3">
+            <li class="flex items-center gap-4 rounded-xl bg-orange-50 border border-orange-100 px-5 py-4">
+                <span class="w-2.5 h-2.5 rotate-45 bg-armonia-orange flex-shrink-0"></span>
+                <span class="font-serif text-xl md:text-2xl font-semibold text-armonia-black">Porque resolver conflictos también es construir.</span>
+            </li>
+            <li class="flex items-center gap-4 rounded-xl bg-gray-50 border border-gray-100 px-5 py-4">
+                <span class="w-2.5 h-2.5 rotate-45 bg-gray-400 flex-shrink-0"></span>
+                <span class="font-serif text-xl md:text-2xl font-semibold text-armonia-black">Porque educar también es transformar.</span>
+            </li>
+            <li class="flex items-center gap-4 rounded-xl bg-escuela-ivory border border-escuela-gold/30 px-5 py-4">
+                <span class="w-2.5 h-2.5 rotate-45 bg-escuela-gold flex-shrink-0"></span>
+                <span class="font-serif text-xl md:text-2xl font-semibold text-escuela-navy">Porque la cultura también puede cambiar vidas.</span>
+            </li>
+        </ul>
+        <div class="px-6 md:px-12 pt-10 pb-12 text-center">
+            <p class="font-serif text-2xl md:text-3xl font-semibold text-armonia-black leading-snug">Dos caminos. Una misma misión:</p>
+            <p class="mt-2 text-lg text-gray-600 max-w-xl mx-auto">construir una sociedad donde el diálogo, la educación y el arte sean motores de transformación.</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+                <a href="pages/area-juridica.html" class="bg-armonia-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition shadow">Área jurídica</a>
+                <a href="pages/area-artistica.html" class="bg-escuela-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-escuela-navy-2 transition shadow">Área artística</a>
+            </div>
+        </div>
+    </dialog>
 
     <!-- ================= INSOLVENTIC ================= -->
     <section id="insolventic" class="insolventic text-white px-4 py-20 md:py-24">
