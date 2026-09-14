@@ -59,8 +59,8 @@ Pagina Web Armonia/
 
 ## Datos de contacto
 
-- **Teléfono Insolvencias:** 312 6 410 449
-- **Teléfono Conciliación:** 313 2 904 984
+- **Teléfono Insolvencias:** 312 641 0449
+- **Teléfono Conciliación:** 313 290 4984
 - **WhatsApp Escuela Colombiana de Violín:** 310 559 3959
 - **Correo:** contacto@armoniaconcertada.co
 - **Dirección:** Oficina 306, Edificio Osaka Trade Center, Bogotá

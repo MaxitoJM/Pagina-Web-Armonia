@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 mostrarAviso(formMessage, 'Abrimos WhatsApp con tu mensaje listo. Recuerda pulsar enviar en la conversación.', 'exito');
             } else {
                 // El navegador bloqueo la ventana emergente: no fingimos que se envio
-                mostrarAviso(formMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 2 904 984.', 'error');
+                mostrarAviso(formMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 313 290 4984.', 'error');
             }
         });
 
