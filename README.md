@@ -24,6 +24,8 @@ Vigilado por el Ministerio de Justicia y del Derecho.
 Pagina Web Armonia/
 ├── index.html          Inicio: las dos áreas, Insolventic y Contáctanos
 ├── README.md
+├── robots.txt          Indexación y ubicación del sitemap
+├── sitemap.xml         Las cuatro páginas con el dominio final
 ├── assets/
 │   ├── images/
 │   ├── icons/
@@ -74,12 +76,24 @@ convertidos a PNG con fondo transparente:
 | Archivo | Tamaño | Uso |
 |---|---|---|
 | `logo-afcjc.png` | 256x252 | Header y footer (emblema: tucán + círculo + AFCJC) |
-| `logo-afcjc-completo.png` | 1024x1024 | Versión maestra con el nombre completo, para impresión u otros usos |
+| `logo-afcjc-completo.png` | 1024x1024 | Versión maestra con el nombre completo, para impresión u otros usos (no va en el ZIP de despliegue) |
 | `favicon.png` | 64x63 | Icono de pestaña del navegador |
 | `apple-touch-icon.png` | 180x177 | Icono para iOS (con fondo blanco, iOS no admite transparencia) |
+| `og-armonia-concertada.jpg` | 1200x630 | Imagen para redes sociales (`og:image` y `twitter:image`), con fondo blanco |
 
 El logo es un trazo negro sobre fondo claro, por lo que en el footer (fondo negro) se
 monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" se lean.
+
+## Dominio y SEO
+
+- Dominio final: https://armoniaconcertada.co (sin www).
+- Cada página declara `canonical`, Open Graph (`og:url`, `og:image`), Twitter Card y datos
+  estructurados JSON-LD, todos con URLs absolutas del dominio final.
+- `robots.txt` y `sitemap.xml` están en la raíz. Al cambiar el contenido, actualizar `<lastmod>`.
+- Las rutas internas (css, js, img, pages) son relativas: el sitio funciona en cualquier dominio o carpeta.
+- Los enlaces a `insolventic.vercel.app` son de la plataforma externa Insolventic y no deben cambiarse.
+- El ZIP de despliegue lleva `index.html` en la raíz y excluye este README y las imágenes que
+  ninguna página usa.
 
 ## Notas técnicas
 
