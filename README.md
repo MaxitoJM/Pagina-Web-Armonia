@@ -66,7 +66,8 @@ Pagina Web Armonia/
 - **WhatsApp Escuela Colombiana de Violín:** 310 331 5253
 - **Correo general:** contacto@armoniaconcertada.co
 - **Correo Escuela Colombiana de Violín:** ecolviolin@gmail.com
-- **Dirección:** Oficina 306, Edificio Osaka Trade Center, Bogotá
+- **Dirección del Centro de Conciliación:** Oficina 306, Edificio Osaka Trade Center, Bogotá
+- **Sede de la Escuela Colombiana de Violín:** Calle 7 #7-112, Chía, Cundinamarca
 - **Horario de atención:** Lunes a viernes de 9:00 a.m. a 6:00 p.m.
 
 ## Logo
@@ -81,6 +82,9 @@ convertidos a PNG con fondo transparente:
 | `favicon.png` | 64x63 | Icono de pestaña del navegador |
 | `apple-touch-icon.png` | 180x177 | Icono para iOS (con fondo blanco, iOS no admite transparencia) |
 | `og-armonia-concertada.jpg` | 1200x630 | Imagen para redes sociales (`og:image` y `twitter:image`), con fondo blanco |
+| `logo-ecv.png` | 512x512 | Emblema circular de la Escuela Colombiana de Violín (portadas, contacto) |
+| `logo-ecv-horizontal.png` | 900x673 | Versión horizontal de la Escuela, para fondos claros |
+| `og-escuela-violin.jpg` | 1200x630 | Imagen para redes del Área artística, sobre fondo marfil |
 
 El logo es un trazo negro sobre fondo claro, por lo que en el footer (fondo negro) se
 monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" se lean.
