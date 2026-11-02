@@ -880,6 +880,24 @@ body {
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
 }
 
+/* El tucan de la Asociacion es trazo oscuro: sobre los fondos oscuros del
+   area juridica se monta en una placa blanca circular con aro naranja, para
+   que haga pareja con el emblema de la Escuela. */
+.logo-afcjc-emblema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    border: 3px solid #FF7A00;
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
+}
+
+.logo-afcjc-emblema img {
+    width: 70%;
+    height: auto;
+}
+
 /* Mapa de la sede de la Escuela */
 .escuela-mapa {
     overflow: hidden;
