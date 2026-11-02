@@ -65,7 +65,7 @@ Pagina Web Armonia/
 - **Teléfono Conciliación:** 313 290 4984
 - **WhatsApp Escuela Colombiana de Violín:** 310 331 5253
 - **Correo general:** contacto@armoniaconcertada.co
-- **Correo Escuela Colombiana de Violín:** pendiente de creación por el cliente
+- **Correo Escuela Colombiana de Violín:** ecolviolin@gmail.com
 - **Dirección:** Oficina 306, Edificio Osaka Trade Center, Bogotá
 - **Horario de atención:** Lunes a viernes de 9:00 a.m. a 6:00 p.m.
 
@@ -107,17 +107,20 @@ monta sobre una placa blanca redondeada para que el círculo y el texto "AFCJC" 
   constante `WHATSAPP_FORMULARIO`, al inicio de `js/main.js`.
 - La Escuela usa la constante `WHATSAPP_ESCUELA` (formulario de valoración, botón flotante
   y llamados a la acción): 310 331 5253.
-- **Correo propio de la Escuela:** constante `CORREO_ESCUELA` en `js/main.js`, hoy vacía.
-  Mientras lo esté, los mensajes de la Escuela llegan al correo general y los bloques que
-  mostrarían su correo quedan ocultos, para no repetir el general. Al escribir la dirección
-  en esa constante se activan solos, en las tres páginas:
+- **Correo propio de la Escuela:** constante `CORREO_ESCUELA` en `js/main.js`
+  (`ecolviolin@gmail.com`). De ella dependen, en las tres páginas:
   - el botón «Enviar por correo» del formulario de valoración y su aviso,
   - los enlaces marcados con `data-correo-escuela` (admisiones, contacto y footer),
-  - los bloques marcados con `data-solo-con-correo-escuela`, que pasan a mostrarse.
+  - los bloques marcados con `data-solo-con-correo-escuela`, visibles solo cuando la
+    constante tiene valor.
 
-  Queda pendiente añadirlo también en `pages/terminos-y-privacidad.html` (identificación de
-  la Asociación y datos del responsable del tratamiento), que es texto legal y no se genera
+  Si se deja vacía, los mensajes de la Escuela vuelven al correo general y esos bloques se
+  ocultan. Al cambiar la dirección hay que actualizar también los `href` estáticos de los
+  enlaces `data-correo-escuela` y `pages/terminos-y-privacidad.html` (identificación,
+  responsable del tratamiento, encargados y nota final), que es texto legal y no se genera
   desde el JavaScript.
+- El correo de la Escuela está alojado en **Gmail**, así que Google figura como encargado en
+  la política de datos y los mensajes quedan sujetos a transferencia internacional.
 - Identidad visual de la Escuela: azul profundo `#0E1B36`, marfil `#FAF6EE`, dorado `#B8965A`
   y grafito `#3B4049`; títulos en Cormorant Garamond y textos en Inter.
 

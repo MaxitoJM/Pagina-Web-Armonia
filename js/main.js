@@ -15,13 +15,11 @@ const WHATSAPP_ESCUELA = '573103315253'; // 310 331 5253
 // Correo general de la Asociacion: recibe los mensajes del formulario de contacto.
 const CORREO_CONTACTO = 'contacto@armoniaconcertada.co';
 
-// Correo propio de la Escuela Colombiana de Violin.
-// PENDIENTE: el cliente aun no lo ha creado. Mientras este vacio, los mensajes
-// de la Escuela llegan al correo general y los bloques que lo mostrarian
-// permanecen ocultos, para no repetir el correo general. Basta con escribirlo
-// aqui para activarlo: el formulario de valoracion, los enlaces y los avisos de
-// todas las paginas se actualizan solos.
-const CORREO_ESCUELA = '';
+// Correo propio de la Escuela Colombiana de Violin. Si se deja vacio, los
+// mensajes de la Escuela pasan al correo general y los bloques que muestran
+// esta direccion quedan ocultos. Al cambiarlo aqui se actualizan solos el
+// formulario de valoracion, los enlaces y los avisos de todas las paginas.
+const CORREO_ESCUELA = 'ecolviolin@gmail.com';
 
 // Correo al que deben llegar los mensajes de la Escuela.
 function correoEscuela() {
