@@ -10,10 +10,23 @@ const WHATSAPP_FORMULARIO = '573132904984'; // Linea de Conciliacion
 
 // Linea de la Escuela Colombiana de Violin (formulario de valoracion, boton
 // flotante y llamados a la accion de la escuela).
-const WHATSAPP_ESCUELA = '573105593959'; // 310 559 3959
+const WHATSAPP_ESCUELA = '573103315253'; // 310 331 5253
 
-// Correo que recibe los mensajes cuando el visitante elige "Enviar por correo".
+// Correo general de la Asociacion: recibe los mensajes del formulario de contacto.
 const CORREO_CONTACTO = 'contacto@armoniaconcertada.co';
+
+// Correo propio de la Escuela Colombiana de Violin.
+// PENDIENTE: el cliente aun no lo ha creado. Mientras este vacio, los mensajes
+// de la Escuela llegan al correo general y los bloques que lo mostrarian
+// permanecen ocultos, para no repetir el correo general. Basta con escribirlo
+// aqui para activarlo: el formulario de valoracion, los enlaces y los avisos de
+// todas las paginas se actualizan solos.
+const CORREO_ESCUELA = '';
+
+// Correo al que deben llegar los mensajes de la Escuela.
+function correoEscuela() {
+    return CORREO_ESCUELA || CORREO_CONTACTO;
+}
 
 // Abre WhatsApp con el texto listo. Devuelve false si el navegador bloqueo la
 // ventana. No se usa 'noopener' en window.open porque con esa opcion el
@@ -29,9 +42,9 @@ function abrirWhatsApp(numero, texto) {
 
 // Abre la aplicacion de correo del visitante con el mensaje ya redactado.
 // Los saltos de linea se envian como CRLF, que es lo que esperan los clientes de correo.
-function abrirCorreo(asunto, texto) {
+function abrirCorreo(destino, asunto, texto) {
     const cuerpo = texto.replace(/\r?\n/g, '\r\n');
-    window.location.href = 'mailto:' + CORREO_CONTACTO +
+    window.location.href = 'mailto:' + destino +
         '?subject=' + encodeURIComponent(asunto) +
         '&body=' + encodeURIComponent(cuerpo);
 }
@@ -56,6 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enlaces de la escuela que dependen del numero configurado arriba
     document.querySelectorAll('[data-whatsapp-escuela]').forEach(enlace => {
         enlace.href = 'https://wa.me/' + WHATSAPP_ESCUELA;
+    });
+
+    // Enlaces al correo de la Escuela. Si el texto del enlace es una direccion
+    // de correo tambien se actualiza; si es una frase ("correo electronico"),
+    // solo cambia el destino.
+    const correoDeLaEscuela = correoEscuela();
+    document.querySelectorAll('[data-correo-escuela]').forEach(enlace => {
+        enlace.href = 'mailto:' + correoDeLaEscuela;
+        if (enlace.textContent.includes('@')) enlace.textContent = correoDeLaEscuela;
+    });
+
+    // Bloques que solo tienen sentido cuando la Escuela tiene correo propio:
+    // mientras no lo tenga mostrarian el correo general y pareceria repetido.
+    // El atributo indica que clase de display restituir al mostrarlos.
+    document.querySelectorAll('[data-solo-con-correo-escuela]').forEach(bloque => {
+        const mostrar = Boolean(CORREO_ESCUELA);
+        bloque.classList.toggle('hidden', !mostrar);
+        const display = bloque.dataset.soloConCorreoEscuela;
+        if (display) bloque.classList.toggle(display, mostrar);
     });
 
     // Mobile Menu Toggle
@@ -236,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contactEmailBtn.addEventListener('click', () => {
                 const datos = leerContacto();
                 if (!datos) return;
-                abrirCorreo('Mensaje desde la página web: ' + datos.asunto, redactarContacto(datos));
+                abrirCorreo(CORREO_CONTACTO, 'Mensaje desde la página web: ' + datos.asunto, redactarContacto(datos));
                 mostrarAviso(formMessage, 'Abrimos tu aplicación de correo con el mensaje listo para enviar. Si no se abrió, escríbenos a ' + CORREO_CONTACTO + '.', 'exito');
             });
         }
@@ -332,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (abrirWhatsApp(WHATSAPP_ESCUELA, redactarValoracion(datos))) {
                 mostrarAviso(valoracionMessage, 'Abrimos WhatsApp con tu solicitud lista. Recuerda pulsar enviar en la conversación.', 'exito');
             } else {
-                mostrarAviso(valoracionMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 310 559 3959.', 'error');
+                mostrarAviso(valoracionMessage, 'Tu navegador bloqueó la apertura de WhatsApp. Permite las ventanas emergentes o escríbenos directamente al 310 331 5253.', 'error');
             }
         });
 
@@ -342,8 +374,8 @@ document.addEventListener('DOMContentLoaded', function() {
             valoracionEmailBtn.addEventListener('click', () => {
                 const datos = leerValoracion();
                 if (!datos) return;
-                abrirCorreo('Solicitud de clase de valoración – Escuela Colombiana de Violín', redactarValoracion(datos));
-                mostrarAviso(valoracionMessage, 'Abrimos tu aplicación de correo con la solicitud lista para enviar. Si no se abrió, escríbenos a ' + CORREO_CONTACTO + '.', 'exito');
+                abrirCorreo(correoEscuela(), 'Solicitud de clase de valoración – Escuela Colombiana de Violín', redactarValoracion(datos));
+                mostrarAviso(valoracionMessage, 'Abrimos tu aplicación de correo con la solicitud lista para enviar. Si no se abrió, escríbenos a ' + correoEscuela() + '.', 'exito');
             });
         }
     }
